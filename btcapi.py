@@ -3,6 +3,7 @@ from flask import Flask, jsonify
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import yfinance as yf
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -28,10 +29,12 @@ model.eval()
 
 scaler = MinMaxScaler()
 
+end_date = datetime.today().strftime('%Y-%m-%d')
+
 @app.route('/predict', methods=['GET'])
 def predict():
     try:
-        btc_data = yf.download('BTC-USD', start='2024-01-01', end='2024-12-01')
+        btc_data = yf.download('BTC-USD', start='2024-01-01', end=end_date)
         btc_close = btc_data[['Close']].values
 
         scaled_data = scaler.fit_transform(btc_close)
